@@ -1,0 +1,113 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AmazonSellerCentralImagePackager.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vl="using:AmazonSellerCentralImagePackager.ViewLogic"
+        xmlns:nuie="using:neXn.Ui.Avalonia.Elements"
+        mc:Ignorable="d"
+        x:Class="AmazonSellerCentralImagePackager.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Resources/logo.ico"
+        Title="{Binding TitleName}"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
+        Padding="12,0,12,0">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <StackPanel Orientation="Horizontal" Margin="4">
+      <Image Source="avares://AmazonSellerCentralImagePackager/Resources/banner-ui.png" VerticalAlignment="Center" Height="128"/>
+    </StackPanel>
+
+    <StackPanel Orientation="Vertical" Grid.Row="1" Margin="4">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+        <TextBlock Text="Source Image:" VerticalAlignment="Center"/>
+        <TextBox PlaceholderText="X:\MyAwesomePicture.jpg" Height="32" Width="240" Margin="12,0,12,0" VerticalAlignment="Center" Text="{Binding OriginalPicturePath, Mode=TwoWay}" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}" />
+        <Button Content="Browse" Command="{Binding BrowseCommand}" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}" />
+      </StackPanel>
+
+      <Grid Margin="0,12,0,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,24,0" Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="{Binding AsinCount, Mode=OneWay, StringFormat=Found distinct ASINs: {0}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" />
+                <Button Grid.Column="1" Content="Clear list" Command="{Binding ClearAsinListCommand}" Margin="0,0,0,0" HorizontalAlignment="Right" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}"/>
+            </StackPanel>
+          <TextBox PlaceholderText="Paste ASINs here (one per line)" Text="{Binding AsinList, Mode=TwoWay}" Width="256" HorizontalAlignment="Left" Height="240" AcceptsReturn="True" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+            <Border Padding="8" Background="#12161C" BorderBrush="#2A3038" BorderThickness="1" CornerRadius="8">
+                  <Grid>
+                      <StackPanel Orientation="Vertical" Spacing="8">
+                        <TextBlock Text="Options" FontWeight="Bold"/>
+                        <Grid RowSpacing="8" ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                                
+                            <TextBlock Grid.Row="0" Text="Image variant:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="0" Grid.Column="2" ItemsSource="{Binding AmazonImageCodes, Mode=TwoWay}" SelectedItem="{Binding SelectedAmazonPictureCode}" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}" />
+                      
+                            <TextBlock Grid.Row="1" Text="Images per ZIP:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ImageCounts}" SelectedValue="{Binding ImagesPerZip}" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}" />
+                     
+                            <CheckBox Grid.Row="2" Content="Open output folder" IsChecked="{Binding OpenOutputFolderWhenDone, Mode=TwoWay}" IsEnabled="{Binding IsBusy, Converter={vl:BoolConverter}}"/>
+                        </Grid>
+                      </StackPanel>
+                  </Grid>
+            </Border>
+        </Grid>
+      </Grid>
+
+      <Grid Margin="0,12,0,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition/>
+          <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="Generate packages" Command="{Binding GeneratePackagesCommand}" />
+          <Button Content="Abort" Command="{Binding AbortCommand}" IsVisible="{Binding IsBusy}" />
+        </StackPanel>
+
+      </Grid>
+
+    </StackPanel>
+
+    <Grid Grid.Row="2" Margin="12,14,0,8" VerticalAlignment="Bottom" ColumnSpacing="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+
+      <TextBlock Grid.Column="0" Text="{Binding Status}" FontSize="10" Foreground="#888888" />
+
+      <ProgressBar Grid.Column="1" Height="8" HorizontalAlignment="Center" Value="{Binding ProgressBarValue}" Maximum="{Binding ProgressBarMaximum}" IsVisible="{Binding IsBusy}" />
+
+      <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Spacing="4">
+        <TextBlock Text="{Binding TitleVersion}" FontStyle="Italic" FontSize="10" FontWeight="Bold" Foreground="#555555" />
+        <nuie:HeartedCredits HorizontalAlignment="Right"/>
+      </StackPanel>
+    </Grid>
+  </Grid>
+
+</Window>
