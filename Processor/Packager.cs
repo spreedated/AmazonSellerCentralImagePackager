@@ -73,6 +73,8 @@ namespace Processor
 
         private async Task CreateZipFile(int filesPerZip, CancellationToken token)
         {
+            ArgumentOutOfRangeException.ThrowIfLessThan(filesPerZip, 1);
+
             await Task.Run(() =>
             {
                 int currentFilesPacked = 0;
